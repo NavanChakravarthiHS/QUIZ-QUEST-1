@@ -126,10 +126,6 @@ const Index = () => {
             <img src="/QuizQuest%20Logo.png" alt="Quiz Quest" className="h-5 w-5 rounded-sm" />
             <span>© {new Date().getFullYear()} Quiz Quest. All rights reserved.</span>
           </div>
-          <div className="flex items-center gap-4">
-            <button className="hover:text-foreground" onClick={() => navigate("/student-login")}>Student</button>
-            <button className="hover:text-foreground" onClick={() => navigate("/teacher-login")}>Teacher</button>
-          </div>
         </div>
       </footer>
     </div>
