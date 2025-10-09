@@ -112,6 +112,14 @@ const StudentAuth = () => {
                 <Button type="submit" className="w-full" disabled={loading}>
                   {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Sign In"}
                 </Button>
+                <Button
+                  type="button"
+                  variant="link"
+                  className="w-full text-sm text-muted-foreground"
+                  onClick={() => navigate("/forgot-password")}
+                >
+                  Forgot your password?
+                </Button>
               </form>
             </TabsContent>
 
