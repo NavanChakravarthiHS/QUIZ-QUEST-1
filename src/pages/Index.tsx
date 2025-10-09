@@ -41,12 +41,32 @@ const Index = () => {
 
   return (
     <div className="min-h-screen">
+      {/* Header */}
+      <header className="sticky top-0 z-20 backdrop-blur supports-[backdrop-filter]:bg-background/70 border-b">
+        <div className="container mx-auto px-4 py-3 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <img
+              src="/QuizQuest%20Logo.png"
+              alt="Quiz Quest Logo"
+              className="h-8 w-8 rounded-sm shadow-sm"
+              loading="eager"
+              decoding="async"
+            />
+            <span className="font-semibold text-lg tracking-tight">Quiz Quest</span>
+          </div>
+          <nav className="hidden sm:flex items-center gap-2">
+            <Button variant="ghost" onClick={() => navigate("/student-login")}>Student</Button>
+            <Button variant="ghost" onClick={() => navigate("/teacher-login")}>Teacher</Button>
+            <Button onClick={() => navigate("/dashboard")}>Go to App</Button>
+          </nav>
+        </div>
+      </header>
       {/* Hero Section */}
       <section className="relative overflow-hidden bg-gradient-to-br from-primary/10 via-secondary/10 to-background py-20 px-4">
         <div className="absolute inset-0 bg-grid-white/5 [mask-image:radial-gradient(white,transparent_85%)]" />
         <div className="container mx-auto text-center relative z-10">
           <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent animate-in fade-in slide-in-from-bottom-4 duration-1000">
-            Quiz Quest
+            Welcome to Quiz Quest!
           </h1>
           <p className="text-xl md:text-2xl text-muted-foreground mb-8 max-w-2xl mx-auto animate-in fade-in slide-in-from-bottom-5 duration-1000 delay-200">
             The ultimate platform for fair, secure, and engaging online quizzes
@@ -98,34 +118,21 @@ const Index = () => {
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-20 px-4 bg-gradient-to-br from-primary/5 via-secondary/5 to-background">
-        <div className="container mx-auto text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            Ready to Transform Your Quizzes?
-          </h2>
-          <p className="text-muted-foreground mb-8 max-w-2xl mx-auto">
-            Join Quiz Quest today and experience the future of online assessments
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button 
-              size="lg" 
-              className="text-lg px-8"
-              onClick={() => navigate("/student-login")}
-            >
-              Student Portal
-            </Button>
-            <Button 
-              size="lg" 
-              variant="secondary"
-              className="text-lg px-8"
-              onClick={() => navigate("/teacher-login")}
-            >
-              Teacher Portal
-            </Button>
+      
+
+      {/* Footer */}
+      <footer className="border-t bg-background/70">
+        <div className="container mx-auto px-4 py-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-sm text-muted-foreground">
+          <div className="flex items-center gap-2">
+            <img src="/QuizQuest%20Logo.png" alt="Quiz Quest" className="h-5 w-5 rounded-sm" />
+            <span>© {new Date().getFullYear()} Quiz Quest. All rights reserved.</span>
+          </div>
+          <div className="flex items-center gap-4">
+            <button className="hover:text-foreground" onClick={() => navigate("/student-login")}>Student</button>
+            <button className="hover:text-foreground" onClick={() => navigate("/teacher-login")}>Teacher</button>
           </div>
         </div>
-      </section>
+      </footer>
     </div>
   );
 };
