@@ -121,11 +121,9 @@ const Index = () => {
 
       {/* Footer */}
       <footer className="border-t bg-background/70">
-        <div className="container mx-auto px-4 py-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-sm text-muted-foreground">
-          <div className="flex items-center gap-2">
-            <img src="/QuizQuest%20Logo.png" alt="Quiz Quest" className="h-5 w-5 rounded-sm" />
-            <span>© {new Date().getFullYear()} Quiz Quest. All rights reserved.</span>
-          </div>
+        <div className="container mx-auto px-4 py-6 flex flex-col items-center justify-center gap-1 text-sm text-muted-foreground text-center">
+          <span className="font-medium text-foreground">Quiz Quest</span>
+          <span>© 2025 Quiz Quest. All rights reserved.</span>
         </div>
       </footer>
     </div>
