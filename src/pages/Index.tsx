@@ -57,7 +57,6 @@ const Index = () => {
           <nav className="hidden sm:flex items-center gap-2">
             <Button variant="ghost" onClick={() => navigate("/student-login")}>Student</Button>
             <Button variant="ghost" onClick={() => navigate("/teacher-login")}>Teacher</Button>
-            <Button onClick={() => navigate("/dashboard")}>Go to App</Button>
           </nav>
         </div>
       </header>
