@@ -55,17 +55,17 @@ const Index = () => {
             <Button 
               size="lg" 
               className="text-lg px-8"
-              onClick={() => navigate("/auth")}
+              onClick={() => navigate("/student-login")}
             >
-              Get Started
+              Student Login
             </Button>
             <Button 
               size="lg" 
-              variant="outline"
+              variant="secondary"
               className="text-lg px-8"
-              onClick={() => navigate("/auth")}
+              onClick={() => navigate("/teacher-login")}
             >
-              Sign In
+              Teacher Login
             </Button>
           </div>
         </div>
@@ -107,13 +107,23 @@ const Index = () => {
           <p className="text-muted-foreground mb-8 max-w-2xl mx-auto">
             Join Quiz Quest today and experience the future of online assessments
           </p>
-          <Button 
-            size="lg" 
-            className="text-lg px-8"
-            onClick={() => navigate("/auth")}
-          >
-            Start Your Journey
-          </Button>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Button 
+              size="lg" 
+              className="text-lg px-8"
+              onClick={() => navigate("/student-login")}
+            >
+              Student Portal
+            </Button>
+            <Button 
+              size="lg" 
+              variant="secondary"
+              className="text-lg px-8"
+              onClick={() => navigate("/teacher-login")}
+            >
+              Teacher Portal
+            </Button>
+          </div>
         </div>
       </section>
     </div>

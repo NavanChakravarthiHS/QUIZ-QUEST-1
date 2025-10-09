@@ -7,9 +7,9 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
-import { Loader2 } from "lucide-react";
+import { Loader2, GraduationCap } from "lucide-react";
 
-const Auth = () => {
+const StudentAuth = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [loginData, setLoginData] = useState({ email: "", password: "" });
@@ -47,6 +47,7 @@ const Auth = () => {
         options: {
           data: {
             full_name: signupData.fullName,
+            role: 'student',
           },
           emailRedirectTo: `${window.location.origin}/dashboard`,
         },
@@ -66,11 +67,16 @@ const Auth = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-muted/30 to-background p-4">
       <Card className="w-full max-w-md">
-        <CardHeader className="text-center">
-          <CardTitle className="text-3xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-            Quiz Quest
+        <CardHeader className="text-center space-y-2">
+          <div className="flex justify-center mb-2">
+            <div className="p-3 rounded-full bg-primary/10">
+              <GraduationCap className="h-8 w-8 text-primary" />
+            </div>
+          </div>
+          <CardTitle className="text-3xl font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
+            Student Portal
           </CardTitle>
-          <CardDescription>Sign in to start your quiz journey</CardDescription>
+          <CardDescription>Sign in to take quizzes and track your progress</CardDescription>
         </CardHeader>
         <CardContent>
           <Tabs defaultValue="login" className="w-full">
@@ -157,4 +163,4 @@ const Auth = () => {
   );
 };
 
-export default Auth;
+export default StudentAuth;
