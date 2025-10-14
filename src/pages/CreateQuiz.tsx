@@ -74,6 +74,20 @@ const CreateQuiz = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-muted/20 to-background">
+      <nav className="border-b bg-card/80 backdrop-blur-sm sticky top-0 z-50">
+        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
+          <div className="flex items-center gap-3">
+            <img 
+              src="/QuizQuest Logo.png" 
+              alt="QuizQuest Logo" 
+              className="h-8 w-8 object-contain"
+            />
+            <h1 className="text-2xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+              Quiz Quest
+            </h1>
+          </div>
+        </div>
+      </nav>
       <main className="container mx-auto px-4 py-8 max-w-2xl">
         <Card>
           <CardHeader>

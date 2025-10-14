@@ -69,8 +69,15 @@ const StudentAuth = () => {
       <Card className="w-full max-w-md">
         <CardHeader className="text-center space-y-2">
           <div className="flex justify-center mb-2">
-            <div className="p-3 rounded-full bg-primary/10">
-              <GraduationCap className="h-8 w-8 text-primary" />
+            <div className="flex items-center gap-3">
+              <img 
+                src="/QuizQuest Logo.png" 
+                alt="QuizQuest Logo" 
+                className="h-8 w-8 object-contain"
+              />
+              <div className="p-3 rounded-full bg-primary/10">
+                <GraduationCap className="h-8 w-8 text-primary" />
+              </div>
             </div>
           </div>
           <CardTitle className="text-3xl font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
