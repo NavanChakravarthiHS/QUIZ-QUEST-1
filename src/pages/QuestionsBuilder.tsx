@@ -35,10 +35,44 @@ const QuestionsBuilder = () => {
   const [saving, setSaving] = useState(false);
   const [savedQuestions, setSavedQuestions] = useState<Question[]>([]);
   const [currentView, setCurrentView] = useState<"form" | "list">("form");
+  const [loading, setLoading] = useState(true);
+  const [editingQuestion, setEditingQuestion] = useState<Question | null>(null);
 
   useEffect(() => {
     if (!quizId) navigate("/dashboard");
+    else loadExistingQuestions();
   }, [quizId, navigate]);
+
+  const loadExistingQuestions = async () => {
+    if (!quizId) return;
+    
+    setLoading(true);
+    try {
+      const { data: questions, error } = await supabase
+        .from("questions")
+        .select("*")
+        .eq("quiz_id", quizId)
+        .order("order_index");
+
+      if (error) throw error;
+
+      if (questions && questions.length > 0) {
+        const formattedQuestions: Question[] = questions.map((q: any) => ({
+          id: q.id,
+          questionText: q.question_text,
+          questionType: q.question_type,
+          options: q.options,
+          correctOptionIds: q.correct_answers,
+          orderIndex: q.order_index,
+        }));
+        setSavedQuestions(formattedQuestions);
+      }
+    } catch (err: any) {
+      toast.error(err.message || "Failed to load existing questions");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const addOption = () => setOptions((prev) => [...prev, { id: crypto.randomUUID(), text: "" }]);
   const removeOption = (id: string) => setOptions((prev) => prev.filter((o) => o.id !== id));
@@ -66,20 +100,36 @@ const QuestionsBuilder = () => {
       return;
     }
 
-    const newQuestion: Question = {
-      id: crypto.randomUUID(),
+    const questionData = {
       questionText: questionText.trim(),
       questionType,
       options: filled,
       correctOptionIds: [...correctOptionIds],
-      orderIndex: savedQuestions.length + 1,
     };
 
-    setSavedQuestions(prev => [...prev, newQuestion]);
-    toast.success("Question added to list");
+    if (editingQuestion) {
+      // Update existing question
+      const updatedQuestion: Question = {
+        ...editingQuestion,
+        ...questionData,
+      };
+      setSavedQuestions(prev => prev.map(q => q.id === editingQuestion.id ? updatedQuestion : q));
+      toast.success("Question updated");
+      setEditingQuestion(null);
+    } else {
+      // Add new question
+      const newQuestion: Question = {
+        id: crypto.randomUUID(),
+        ...questionData,
+        orderIndex: savedQuestions.length + 1,
+      };
+      setSavedQuestions(prev => [...prev, newQuestion]);
+      toast.success("Question added to list");
+    }
     
     // Reset for next question
     setQuestionText("");
+    setQuestionType("single");
     setOptions([
       { id: crypto.randomUUID(), text: "" },
       { id: crypto.randomUUID(), text: "" },
@@ -97,8 +147,19 @@ const QuestionsBuilder = () => {
     setQuestionType(question.questionType);
     setOptions(question.options);
     setCorrectOptionIds(question.correctOptionIds);
-    removeQuestion(question.id);
+    setEditingQuestion(question);
     setCurrentView("form");
+  };
+
+  const cancelEdit = () => {
+    setQuestionText("");
+    setQuestionType("single");
+    setOptions([
+      { id: crypto.randomUUID(), text: "" },
+      { id: crypto.randomUUID(), text: "" },
+    ]);
+    setCorrectOptionIds([]);
+    setEditingQuestion(null);
   };
 
   const saveAllQuestions = async () => {
@@ -109,6 +170,15 @@ const QuestionsBuilder = () => {
 
     setSaving(true);
     try {
+      // First, delete all existing questions for this quiz
+      const { error: deleteError } = await supabase
+        .from("questions")
+        .delete()
+        .eq("quiz_id", quizId);
+      
+      if (deleteError) throw deleteError;
+
+      // Then insert all questions
       const questionsToSave = savedQuestions.map((q, index) => ({
         quiz_id: quizId,
         question_text: q.questionText,
@@ -122,7 +192,6 @@ const QuestionsBuilder = () => {
       if (error) throw error;
       
       toast.success(`${savedQuestions.length} questions saved successfully`);
-      setSavedQuestions([]);
       setCurrentView("form");
     } catch (err: any) {
       toast.error(err.message || "Failed to save questions");
@@ -173,6 +242,23 @@ const QuestionsBuilder = () => {
     }
   };
 
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-background via-muted/20 to-background">
+        <main className="container mx-auto px-4 py-8 max-w-4xl">
+          <Card>
+            <CardContent className="pt-6">
+              <div className="text-center py-12">
+                <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary mx-auto"></div>
+                <p className="mt-2 text-muted-foreground">Loading questions...</p>
+              </div>
+            </CardContent>
+          </Card>
+        </main>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-muted/20 to-background">
       <main className="container mx-auto px-4 py-8 max-w-4xl">
@@ -191,6 +277,14 @@ const QuestionsBuilder = () => {
               </TabsList>
               
               <TabsContent value="form" className="space-y-6 mt-6">
+                {editingQuestion && (
+                  <div className="p-3 bg-blue-50 border border-blue-200 rounded-md">
+                    <p className="text-sm text-blue-800">
+                      <strong>Editing Question:</strong> {editingQuestion.questionText}
+                    </p>
+                  </div>
+                )}
+                
                 <div className="space-y-2">
                   <Label htmlFor="qtext">Question</Label>
                   <Input id="qtext" value={questionText} onChange={(e) => setQuestionText(e.target.value)} placeholder="Type your question here" />
@@ -234,11 +328,16 @@ const QuestionsBuilder = () => {
                 <div className="flex justify-between gap-2">
                   <Button type="button" variant="ghost" onClick={() => navigate("/dashboard")}>Back to Dashboard</Button>
                   <div className="flex gap-2">
+                    {editingQuestion && (
+                      <Button type="button" variant="outline" onClick={cancelEdit}>
+                        Cancel Edit
+                      </Button>
+                    )}
                     <Button type="button" variant="outline" onClick={() => setCurrentView("list")}>
                       View Questions ({savedQuestions.length})
                     </Button>
                     <Button type="button" onClick={addQuestion}>
-                      Add to List
+                      {editingQuestion ? "Update Question" : "Add to List"}
                     </Button>
                   </div>
                 </div>

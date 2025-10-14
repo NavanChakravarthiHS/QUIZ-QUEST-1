@@ -6,8 +6,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { User } from "@supabase/supabase-js";
-import { PlusCircle, LogOut, Shield, BookOpen, ClipboardCheck, Clock, Users, Eye } from "lucide-react";
+import { PlusCircle, LogOut, Shield, BookOpen, ClipboardCheck, Clock, Users, Eye, Edit, Share2 } from "lucide-react";
 import { toast } from "sonner";
+import QuizShareModal from "@/components/QuizShareModal";
 
 type Quiz = {
   id: string;
@@ -30,6 +31,8 @@ const Dashboard = () => {
   const [availableQuizzes, setAvailableQuizzes] = useState<Quiz[]>([]);
   const [myQuizzes, setMyQuizzes] = useState<Quiz[]>([]);
   const [quizzesLoading, setQuizzesLoading] = useState(true);
+  const [shareModalOpen, setShareModalOpen] = useState(false);
+  const [selectedQuiz, setSelectedQuiz] = useState<Quiz | null>(null);
 
   useEffect(() => {
     checkUser();
@@ -155,6 +158,19 @@ const Dashboard = () => {
   }
 
   const isTeacherOrAdmin = userRole === "teacher" || userRole === "admin";
+
+  const handleEditQuiz = (quizId: string) => {
+    navigate(`/quiz/${quizId}/edit`);
+  };
+
+  const handleEditQuestions = (quizId: string) => {
+    navigate(`/quiz/${quizId}/questions`);
+  };
+
+  const handleShareQuiz = (quiz: Quiz) => {
+    setSelectedQuiz(quiz);
+    setShareModalOpen(true);
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-muted/20 to-background">
@@ -336,8 +352,20 @@ const Dashboard = () => {
                                 <Eye className="h-4 w-4 mr-2" />
                                 View
                               </Button>
-                              <Button size="sm" variant="outline">
+                              <Button 
+                                size="sm" 
+                                variant="outline" 
+                                onClick={() => handleEditQuiz(quiz.id)}
+                              >
+                                <Edit className="h-4 w-4 mr-1" />
                                 Edit
+                              </Button>
+                              <Button 
+                                size="sm" 
+                                variant="outline" 
+                                onClick={() => handleShareQuiz(quiz)}
+                              >
+                                <Share2 className="h-4 w-4" />
                               </Button>
                             </div>
                           </CardContent>
@@ -351,6 +379,14 @@ const Dashboard = () => {
           )}
         </Tabs>
       </main>
+      
+      {selectedQuiz && (
+        <QuizShareModal
+          quiz={selectedQuiz}
+          isOpen={shareModalOpen}
+          onClose={() => setShareModalOpen(false)}
+        />
+      )}
     </div>
   );
 };
